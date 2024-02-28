@@ -1,10 +1,10 @@
 //  MongoDB connection via mongoose
 const mongoose = require("mongoose");
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(`${__dirname}/config/.env`) });
 mongoose.set("strictQuery", false);
 
-// TODO: change MongoDB DB/Collection
-const uri = `mongodb+srv://mnrabbani:kztDSuHPEELfHBk4@myivi.xhjrir2.mongodb.net/onlineStore?retryWrites=true&w=majority`;
+const uri = process.env.ATLAS_URI;
 
 // Connect to Mongoose
 const Main = async () => {

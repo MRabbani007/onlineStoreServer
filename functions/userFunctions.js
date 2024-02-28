@@ -1,4 +1,4 @@
-const user = require("../dbSchemas/user");
+const user = require("../db_schemas/user");
 
 const userInfo = [];
 
