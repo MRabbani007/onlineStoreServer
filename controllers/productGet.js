@@ -1,6 +1,6 @@
 const product = require("../db_schemas/product");
 
-const handleProductGet = async (req, res) => {
+const handleProductGetID = async (req, res) => {
   try {
     const action = req?.body?.action;
     if (action) {
@@ -18,4 +18,4 @@ const handleProductGet = async (req, res) => {
   }
 };
 
-module.exports = handleProductGet;
+module.exports = { handleProductGetID };

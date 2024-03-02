@@ -11,12 +11,13 @@ const handleCartAdd = async (req, res) => {
 
       console.log("Cart Add:", userName);
       const userID = await getUserID(userName);
-      const { id, name, priceCents, property, value, quantity } =
+      const { id, prodID, name, priceCents, property, value, quantity } =
         payload.newCartItem;
       if (userID) {
         let newCartItem = new cart({
           userID: userID,
           id,
+          prodID,
           name,
           priceCents,
           property,

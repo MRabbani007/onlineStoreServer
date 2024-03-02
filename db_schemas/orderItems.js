@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-// Schema for Cart Documents
-const cartItemSchema = new mongoose.Schema({
-  // TODO: Implement Cart Schema
+// Schema for Order Documents
+const orderItemSchema = new mongoose.Schema({
   id: { type: String, required: false },
+  orderID: { type: String, required: false },
   userID: { type: String, required: false },
   prodID: { type: String, required: false },
   name: { type: String, required: false },
@@ -12,8 +12,11 @@ const cartItemSchema = new mongoose.Schema({
   property: [{ type: String, required: false }],
   value: [{ type: String, required: false }],
   quantity: { type: Number, required: false },
+  orderDate: { type: Date, required: false },
+  deliveryDate: { type: Date, required: false },
+  deliveryStatus: Boolean,
 });
 
-const cart = mongoose.model("cart", cartItemSchema);
+const orderItem = mongoose.model("orderItem", orderItemSchema);
 
-module.exports = cart;
+module.exports = orderItem;

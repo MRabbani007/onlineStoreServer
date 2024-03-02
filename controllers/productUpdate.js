@@ -39,6 +39,8 @@ const handleProductUpdate = async (req, res) => {
       if (data.acknowledged) {
       }
 
+      console.log(data);
+
       return res
         .status(200)
         .json({ status: "success", message: "Product Updated" });

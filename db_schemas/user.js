@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
   key: { type: String, required: false },
   accessToken: { type: String, required: false },
   refreshToken: { type: String, required: false },
+
+  language: String,
+  currency: String,
+  itemsPerPage: Number,
 });
 
 const User = mongoose.model("User", userSchema);

@@ -34,7 +34,7 @@ const handleOrdersCreate = async (req, res) => {
           let newOrder = new order({
             userID: userID,
             orderID: crypto.randomUUID(),
-            orderDate: "",
+            orderDate: Date(),
             orderStatus: "pending",
             priceCents: {
               itemsPrice: itemsPrice,

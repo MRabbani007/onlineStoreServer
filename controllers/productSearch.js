@@ -71,4 +71,32 @@ const searchNameCategory = async (query, category, page = 1) => {
   }
 };
 
-module.exports = handleProductSearch;
+const handleProductSearchSupplier = async (req, res) => {
+  try {
+    const action = req?.body?.action;
+    if (action) {
+      const { type, payload } = action;
+      let { supplier, activePage } = payload;
+      supplier = supplier.replace("Store", "").replace("store", "").trim();
+      console.log("Request search Supplier: ", supplier);
+      let temp = await product.find({
+        supplier: { $regex: supplier, $options: "i" },
+      });
+      let count = temp.length;
+      let data = await product
+        .find({
+          supplier: { $regex: supplier, $options: "i" },
+        })
+        .limit(ITEMS_PER_PAGE)
+        .skip(ITEMS_PER_PAGE * (activePage - 1));
+      return res.status(200).json({ products: data, count: count });
+    } else {
+      return res.status(204).json({ status: "failed", message: "no action" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};
+
+module.exports = { handleProductSearch, handleProductSearchSupplier };

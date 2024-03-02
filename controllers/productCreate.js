@@ -10,10 +10,6 @@ const handleProductCreate = async (req, res) => {
 
       console.log("Product Create:", clientProduct.id);
 
-      const newProduct = await product.findOne({ id: clientProduct.id });
-
-      console.log(newProduct);
-
       const data = await product.findOne({ id: clientProduct.id });
       if (!!data) {
         return res
@@ -39,11 +35,13 @@ const handleProductCreate = async (req, res) => {
           imagesBasedOn: clientProduct.imagesBasedOn,
           about: clientProduct.about,
           details: clientProduct.details,
+          purchased: 0,
+          createDate: Date(),
         });
         // save request to db
         await newProduct.save();
         console.log("Product added");
-        return res.status(204).json({ status: "success" });
+        return res.status(200).json({ status: "success" });
       }
     } else {
       return res.status(204).json({ status: "failed", message: "No action" });

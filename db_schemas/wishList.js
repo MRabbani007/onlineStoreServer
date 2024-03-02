@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // Schema for Cart Documents
-const cartItemSchema = new mongoose.Schema({
+const wishListItemSchema = new mongoose.Schema({
   // TODO: Implement Cart Schema
   id: { type: String, required: false },
   userID: { type: String, required: false },
@@ -14,6 +14,6 @@ const cartItemSchema = new mongoose.Schema({
   quantity: { type: Number, required: false },
 });
 
-const cart = mongoose.model("cart", cartItemSchema);
+const wishList = mongoose.model("cart", wishListItemSchema);
 
-module.exports = cart;
+module.exports = wishList;
