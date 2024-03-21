@@ -11,8 +11,16 @@ const handleCartAdd = async (req, res) => {
 
       console.log("Cart Add:", userName);
       const userID = await getUserID(userName);
-      const { id, prodID, name, priceCents, property, value, quantity } =
-        payload.newCartItem;
+      const {
+        id,
+        prodID,
+        name,
+        priceCents,
+        property,
+        value,
+        quantity,
+        imagesURL,
+      } = payload.newCartItem;
       if (userID) {
         let newCartItem = new cart({
           userID: userID,
@@ -23,6 +31,7 @@ const handleCartAdd = async (req, res) => {
           property,
           value,
           quantity,
+          imagesURL,
         });
         let data = await newCartItem.save();
         return res.status(200).json(data);
@@ -33,6 +42,7 @@ const handleCartAdd = async (req, res) => {
       return res.status(204).json({ status: "failed", message: "No action" });
     }
   } catch (error) {
+    console.log(error);
     return res.sendStatus(500);
   }
 };

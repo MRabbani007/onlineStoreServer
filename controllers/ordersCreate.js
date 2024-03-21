@@ -29,6 +29,7 @@ const handleOrdersCreate = async (req, res) => {
               quantity: cartItem.quantity,
               deliveryDate: "",
               deliveryStatus: false,
+              imagesURL: cartItem.imagesURL,
             });
           });
           let newOrder = new order({

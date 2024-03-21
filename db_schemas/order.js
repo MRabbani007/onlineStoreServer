@@ -21,6 +21,7 @@ const orderSchema = new mongoose.Schema({
       quantity: { type: Number, required: false },
       deliveryDate: { type: Date, required: false },
       deliveryStatus: Boolean,
+      imagesURL: { type: String, required: false },
     },
   ],
 });

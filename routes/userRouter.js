@@ -5,7 +5,6 @@ const {
   handleSignUp,
   handleSignOut,
   handleRefreshToken,
-  handleGetUsers,
   handleUserGetSettings,
   handleUserEditSettings,
   handleUserPassword,
@@ -23,8 +22,6 @@ userRouter.post("/logout", handleSignOut);
 
 // Refresh Access Token
 userRouter.get("/refresh", handleRefreshToken);
-
-userRouter.route("/admin").post(verifyRoles(5150), handleGetUsers);
 
 userRouter
   .route("/settings")

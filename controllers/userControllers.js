@@ -30,6 +30,7 @@ const handleSignUp = async (req, res) => {
           id: crypto.randomUUID(),
           username: username,
           password: hashedPwd,
+          password_date: new Date(),
           name: "",
           email: "",
           roles: 2001,
@@ -82,14 +83,12 @@ const handleSignIn = async (req, res) => {
           }
 
           if (match) {
-            console.log(foundUser.roles);
             const roles = Object.values(foundUser.roles).filter(Boolean);
             const accessToken = jwt.sign(
               { UserInfo: { username: foundUser.username, roles: roles } },
               process.env.ACCESS_TOKEN_SECRET,
               { expiresIn: "1h" }
             );
-            console.log(roles);
             const refreshToken = jwt.sign(
               { username: foundUser.username },
               process.env.REFRESH_TOKEN_SECRET,
@@ -98,6 +97,7 @@ const handleSignIn = async (req, res) => {
 
             // Saving refreshToken with current user
             foundUser.refreshToken = refreshToken;
+            foundUser.active = true;
             const result = await foundUser.save();
 
             res.cookie("jwt", refreshToken, {
@@ -197,6 +197,7 @@ const handleSignOut = async (req, res) => {
     } else {
       // Delete refreshToken in db
       foundUser.refreshToken = "";
+      foundUser.active = false;
       const result = await foundUser.save();
 
       res.clearCookie("jwt", {
@@ -255,6 +256,7 @@ const handleUserPassword = async (req, res) => {
           // encrypt password
           const hashedPwd = await bcrypt.hash(newPassword, 10);
           foundUser.password = hashedPwd;
+          foundUser.password_date = new Date();
           let result = await foundUser.save();
           return res
             .status(200)
@@ -283,32 +285,21 @@ const getUserID = async (username) => {
   }
 };
 
-// Get user details for admin
-const handleGetUsers = async (req, res) => {
-  try {
-    const data = await user.find(
-      {},
-      { password: 0, accessToken: 0, refreshToken: 0 }
-    );
-    if (data.length !== 0) {
-      return res.status(200).json(data);
-    } else {
-      return res.sendStatus(204);
-    }
-  } catch (error) {}
-};
-
 // Get settings for user
 const handleUserGetSettings = async (req, res) => {
   try {
-    const username = req?.body?.username;
+    const action = req?.body?.action;
+    const { type, payload } = action;
+
+    const username = payload?.username;
 
     const data = await user
       .findOne(
         { username: username },
-        { name: 1, email: 1, theme: 1, descriptions: 1 }
+        { _id: 0, password: 0, accessToken: 0, refreshToken: 0 }
       )
       .exec();
+
     if (data.length !== 0) {
       return res.status(200).json(data);
     } else {
@@ -324,8 +315,8 @@ const handleUserEditSettings = async (req, res) => {
     const action = req?.body?.action;
     const { type, payload } = action;
     switch (type) {
-      case "EDIT_NAME": {
-        if (!payload?.name) {
+      case "USER_EDIT_NAME": {
+        if (!payload?.firstname || !payload?.lastname) {
           return res
             .status(200)
             .json({ status: "failed", message: "name not found" });
@@ -333,37 +324,27 @@ const handleUserEditSettings = async (req, res) => {
           const data = await user
             .updateOne(
               { username: payload?.username },
-              { $set: { name: payload?.name } }
+              {
+                $set: {
+                  firstname: payload?.firstname,
+                  lastname: payload?.lastname,
+                },
+              }
             )
             .exec();
           return res.status(200).json({ status: "success", message: "added" });
         }
       }
-      case "EDIT_EMAIL": {
+      case "USER_EDIT_EMAIL": {
         if (!payload?.email) {
           return res
             .status(200)
-            .json({ status: "failed", message: "email not found" });
+            .json({ status: "failed", message: "Email not found" });
         } else {
           const data = await user
             .updateOne(
               { username: payload?.username },
               { $set: { email: payload?.email } }
-            )
-            .exec();
-          return res.status(200).json({ status: "success", message: "added" });
-        }
-      }
-      case "EDIT_THEME": {
-        if (!payload?.theme) {
-          return res
-            .status(200)
-            .json({ status: "failed", message: "theme not found" });
-        } else {
-          const data = await user
-            .updateOne(
-              { username: payload?.username },
-              { $set: { theme: payload?.theme } }
             )
             .exec();
           return res.status(200).json({ status: "success", message: "added" });
@@ -401,7 +382,6 @@ module.exports = {
   handleSignOut,
   handleUserUpdate,
   handleRefreshToken,
-  handleGetUsers,
   handleUserGetSettings,
   handleUserEditSettings,
   handleUserPassword,

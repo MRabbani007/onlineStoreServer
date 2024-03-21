@@ -7,6 +7,7 @@ const orderItemSchema = new mongoose.Schema({
   userID: { type: String, required: false },
   prodID: { type: String, required: false },
   name: { type: String, required: false },
+  supplierID: { type: String, required: false },
   supplier: { type: String, required: false },
   priceCents: { type: Number, required: false },
   property: [{ type: String, required: false }],
@@ -15,6 +16,7 @@ const orderItemSchema = new mongoose.Schema({
   orderDate: { type: Date, required: false },
   deliveryDate: { type: Date, required: false },
   deliveryStatus: Boolean,
+  imagesURL: { type: String, required: false },
 });
 
 const orderItem = mongoose.model("orderItem", orderItemSchema);

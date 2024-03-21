@@ -37,6 +37,7 @@ const productSchema = new mongoose.Schema({
   details: [{ name: { type: [String] }, value: { type: [String] } }],
 
   createDate: Date,
+  visible: String,
   purchased: Number,
   refURL: String,
 });
